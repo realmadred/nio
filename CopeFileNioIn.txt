@@ -1,0 +1,36 @@
+package com;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+
+/**
+ * @auther Administrator
+ * @date 2017/8/19
+ * @description 描述
+ */
+public class CopeFileNio {
+
+    public static void main(String[] args) {
+        final String fileIn = "H:\\GitHub\\com.lf.nio\\nio\\src\\com\\lf\\CopeFileNio.java";
+        final String fileOut = "CopeFileNioOut.txt";
+        try (FileChannel inChannel = new FileInputStream(fileIn).getChannel();
+             FileChannel outChannel = new FileOutputStream(fileOut).getChannel()) {
+            // 创建buff
+            ByteBuffer buffer = ByteBuffer.allocate(2048);
+            while (true) {
+                // 需要清理buffer
+                buffer.clear();
+                if (inChannel.read(buffer) <= 0) break;
+                // 压缩准备读取
+                buffer.flip();
+                outChannel.write(buffer);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
