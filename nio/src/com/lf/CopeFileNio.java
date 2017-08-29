@@ -17,8 +17,12 @@ public class CopeFileNio {
     public static void main(String[] args) {
         final String fileIn = "CopeFileNioIn.txt";
         final String fileOut = "CopeFileNioOut.txt";
-        try (FileChannel inChannel = new FileInputStream(fileIn).getChannel();
-             FileChannel outChannel = new FileOutputStream(fileOut).getChannel()) {
+        copyTransfer(fileIn,fileOut);
+    }
+
+    public static void copy(final String src,final String det){
+        try (FileChannel inChannel = new FileInputStream(src).getChannel();
+             FileChannel outChannel = new FileOutputStream(det).getChannel()) {
             // 创建buff
             ByteBuffer buffer = ByteBuffer.allocate(2048);
             while (true) {
@@ -33,4 +37,20 @@ public class CopeFileNio {
             e.printStackTrace();
         }
     }
+
+    /**
+     * 可以实现零拷贝
+     * @param src
+     * @param det
+     */
+    public static void copyTransfer(final String src,final String det){
+        try (FileChannel inChannel = new FileInputStream(src).getChannel();
+             FileChannel outChannel = new FileOutputStream(det).getChannel()) {
+            inChannel.transferTo(0,inChannel.size(),outChannel);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
